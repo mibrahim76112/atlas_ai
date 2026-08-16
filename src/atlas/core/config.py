@@ -3,8 +3,9 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import PostgresDsn, RedisDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
     """Typed application settings, validated at startup."""
@@ -25,7 +26,7 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
 
     # --- Infrastructure (no defaults: must be supplied) ---
-    database_url: PostgresDsn   
+    database_url: PostgresDsn
     redis_url: RedisDsn
 
 
