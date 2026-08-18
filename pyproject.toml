@@ -4,8 +4,11 @@ version = "0.1.0"
 description = "Multi-tenant AI chat backend"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.19.1",
+    "asyncpg>=0.31.0",
     "fastapi>=0.141.1",
     "pydantic-settings>=2.15.0",
+    "sqlalchemy[asyncio]>=2.0.52",
     "uvicorn[standard]>=0.52.3",
 ]
 
@@ -20,6 +23,7 @@ packages = ["src/atlas"]
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
+extend-exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = [
@@ -54,6 +58,7 @@ disallow_untyped_defs = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q --strict-markers"
+asyncio_mode = "auto"
 
 [dependency-groups]
 dev = [
@@ -61,5 +66,7 @@ dev = [
     "httpx2>=2.10.0",
     "mypy>=2.3.1",
     "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
     "ruff>=0.16.3",
 ]
