@@ -1,16 +1,15 @@
 """Health check endpoints."""
 
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from atlas.core.config import Settings, get_settings
 from atlas.db.session import get_db
-import logging
-
-from sqlalchemy import text
 
 router = APIRouter(tags=["health"])
 logger = logging.getLogger(__name__)
