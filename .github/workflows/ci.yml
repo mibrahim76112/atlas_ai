@@ -5,9 +5,38 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  ENVIRONMENT: test
+  DATABASE_URL: postgresql+asyncpg://atlas:atlas@localhost:5432/atlas
+  REDIS_URL: redis://localhost:6379/0
+
 jobs:
   quality:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: atlas
+          POSTGRES_DB: atlas
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U atlas"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,6 +51,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
+      - name: Create test database
+        env:
+          PGPASSWORD: atlas
+        run: psql -h localhost -U atlas -d atlas -c "CREATE DATABASE atlas_test OWNER atlas;"
+
       - name: Lint
         run: uv run ruff check .
 
@@ -31,9 +65,11 @@ jobs:
       - name: Type check
         run: uv run mypy src
 
+      - name: Migrations apply cleanly
+        run: uv run alembic upgrade head
+
+      - name: No model/migration drift
+        run: uv run alembic check
+
       - name: Tests
-        env:
-          ENVIRONMENT: test
-          DATABASE_URL: postgresql+asyncpg://atlas:atlas@localhost:5432/atlas
-          REDIS_URL: redis://localhost:6379/0
-        run: uv run pytest
+        run: uv run pytest --cov=atlas --cov-report=term-missing
