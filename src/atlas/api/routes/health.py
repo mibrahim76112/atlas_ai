@@ -11,8 +11,10 @@ from atlas.db.session import get_db
 import logging
 
 from sqlalchemy import text
+
 router = APIRouter(tags=["health"])
 logger = logging.getLogger(__name__)
+
 
 class HealthResponse(BaseModel):
     """Liveness response payload."""

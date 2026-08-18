@@ -13,9 +13,7 @@ async def test_user_can_be_persisted(db_session: AsyncSession) -> None:
     db_session.add(User(email="adeel@example.com", password_hash="not-a-real-hash"))
     await db_session.commit()
 
-    result = await db_session.execute(
-        select(User).where(User.email == "adeel@example.com")
-    )
+    result = await db_session.execute(select(User).where(User.email == "adeel@example.com"))
     saved = result.scalar_one()
 
     assert saved.id is not None
