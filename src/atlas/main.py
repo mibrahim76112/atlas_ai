@@ -2,7 +2,8 @@
 
 from fastapi import FastAPI
 
-from atlas.api.routes import health
+from atlas.api.errors import register_exception_handlers
+from atlas.api.routes import auth, health
 from atlas.core.config import get_settings
 from atlas.core.logging import configure_logging
 from atlas.core.middleware import RequestContextMiddleware
@@ -21,7 +22,9 @@ def create_app() -> FastAPI:
     )
 
     app.add_middleware(RequestContextMiddleware)
+    register_exception_handlers(app)
     app.include_router(health.router)
+    app.include_router(auth.router, prefix=settings.api_v1_prefix)
 
     return app
 
