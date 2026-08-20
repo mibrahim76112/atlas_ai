@@ -27,6 +27,7 @@ TEST_REDIS_URL = f"{_redis_base}/15"
 
 test_engine = create_async_engine(TEST_DATABASE_URL, poolclass=NullPool)
 
+
 @pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
 async def _create_schema() -> AsyncGenerator[None, None]:
     """Build the schema once for the whole test session."""
