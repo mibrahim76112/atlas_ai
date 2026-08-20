@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     database_url: PostgresDsn
     redis_url: RedisDsn
 
+    # --- Security ---
+    jwt_secret_key: str  # no default, ever
+    jwt_algorithm: Literal["HS256"] = "HS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 7
+
 
 @lru_cache
 def get_settings() -> Settings:
