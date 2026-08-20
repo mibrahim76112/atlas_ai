@@ -9,7 +9,7 @@ env:
   ENVIRONMENT: test
   DATABASE_URL: postgresql+asyncpg://atlas:atlas@localhost:5432/atlas
   REDIS_URL: redis://localhost:6379/0
-
+  JWT_SECRET_KEY: ci-only-not-a-real-secret-0000000000000000000000000000000000
 jobs:
   quality:
     runs-on: ubuntu-latest
